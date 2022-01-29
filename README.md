@@ -91,7 +91,7 @@ cat Agung_PI_en.tar.* | tar xf -
   - with `nohup`
     
     ``` example
-    nohup bash -c 'cat Agung_PI_en.tar.* | tar xf -'
+    nohup bash -c '/usr/bin/time -o untar-out cat Agung_PI_en.tar.* | tar xf -' 1> nohup.out 2>&1 &
     ```
 
 Once the tarballs have been extracted, you can delete them with:

@@ -103,5 +103,5 @@ rm Agung_PI_en.tar.*
 # Uploading data
 
 To upload data from to `tigerdata` you need to send an email to David
-Luet with the subject: `tigerdata offload` and the list of directories
-that you want uploaded in the body of the email.
+Luet with the subject: `tiger offload` and the list of directories that
+you want uploaded in the body of the email.

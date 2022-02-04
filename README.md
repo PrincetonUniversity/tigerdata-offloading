@@ -3,6 +3,8 @@
       - [Downloading data](#downloading-data-1)
           - [Downloading the tarballs](#downloading-the-tarballs)
           - [Extracting the tarballs](#extracting-the-tarballs)
+          - [Checking the integrity of the
+            files](#checking-the-integrity-of-the-files)
   - [Uploading data](#uploading-data)
 
 # Downloading data
@@ -29,7 +31,7 @@ shows the directories under `tiger1` and
 rclone ls tigerdata:/tigress-gvecchi/tigress/wenchang/MODEL_OUT/tiger1/Agung_PI_en
 ```
 
-will show you the files under the this directory.
+will show you the files under the directory.
 
 ## Downloading data
 
@@ -62,12 +64,12 @@ Step 1:
 <!-- end list -->
 
 ``` example
-rclone -Pl sync tigerdata:/tigress-gvecchi/tigress/wenchang/MODEL_OUT/tiger1/AgungPI_en/ Agung_PI_en/ --transfers 8
+rclone -Pl sync tigerdata:/tigress-gvecchi/tigress/wenchang/MODEL_OUT/tiger1/Agung_PI_en/ Agung_PI_en/ --transfers 8
 ```
 
 the `-P` is to show you progress, and `--transfers 8` is to use 8
 streams to download the data. Note that this will create a directory
-`AgungPI_en` under the `tmp` directory. If you use `nohup`, you don't
+`Agung_PI_en` under the `tmp` directory. If you use `nohup`, you don't
 need to use the `-P`
 
 ``` example
@@ -99,6 +101,67 @@ Once the tarballs have been extracted, you can delete them with:
 ``` example
 rm Agung_PI_en.tar.* 
 ```
+
+### Checking the integrity of the files
+
+If the download didn't output an error, it's very likely that the files
+that you downloaded are the correct. But if you have a doubt, you can
+check that the files are the same as the original ones. This is done by
+comparing the MD5 hash of the current file with the original one. You
+can do it for:
+
+  - individual files: this is quick,
+  - the entire data that was downloaded: this is computationally
+    expensive and you should avoid it unless you really need to.
+
+<!-- end list -->
+
+1.  Checking the md5sum of individual files
+    
+    The downloaded data contains a file with the `.md5` extension. It
+    contains the md5 hash of every file that was downloaded as well of
+    files that were symlink'ed. To continue on the example from above,
+    that file would be:
+    
+    ``` example
+    Agung_PI_en.md5
+    ```
+    
+    Let's assume you want to compare the md5 checksum of the file
+    currently
+    
+    ``` example
+    en15/POSTP_deflate1/19630101.ocean_scalar.nc
+    ```
+    
+    with the original md5 checksum. You get the checksum of the current
+    file with:
+    
+    ``` example
+    $ md5sum Agung_PI_en/en15/POSTP_deflate1/19630101.ocean_scalar.nc
+    9d32005c7e75413844ee3d731f6df14f  Agung_PI_en/en15/POSTP_deflate1/19630101.ocean_scalar.nc
+    ```
+    
+    and get the original one with:
+    
+    ``` example
+    $ grep en15/POSTP_deflate1/19630101.ocean_scalar.nc Agung_PI_en.md5
+    9d32005c7e75413844ee3d731f6df14f  ./en15/POSTP_deflate1/19630101.ocean_scalar.nc
+    ```
+    
+    and compare the resulting strings. In this example the strings are
+    the same.
+
+2.  Checking the of the entire set of downloaded files
+    
+    To check the integrity of the entire data downloaded you can use:
+    
+    ``` example
+    md5sum -c ../Agung_PI_en.md5
+    ```
+    
+    This will take close to 3 hours on a set of 2 TB of data with 2100
+    files.
 
 # Uploading data
 
